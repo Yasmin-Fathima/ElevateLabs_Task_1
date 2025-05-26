@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Port Scanning Guide</title>
+</head>
+<style>
+    body{
+        background-color: antiquewhite;
+        padding: 10px 50px;
+    }
+    .head{
+        text-align: center;
+
+    }
+</style>
+<body>
+    <h1 class="head">Network Port Scanning Guide</h1>
+    <p><b>Tools Used:</b> Nmap, Wireshark</p>
+
+    <h2>Installing Nmap</h2>
+    <ol>
+        <li>Go to <a href="https://nmap.org/download.html">nmap.org/download.html</a></li>
+        <li>Click on Windows</li>
+        <br><img src="windows.png"></br><br>
+        <li>Click on the Latest stable release self-installer</li>
+        <br><img src="self-installer.png"></br><br>
+        <li>Once the download is complete, locate the nmap-version-setup.exe file and double click on it to run</li>
+        <li>Click Yes to the prompt to allow the app to make changes to your device</li>
+        <li>Click Agree after reading the License Agreement</li>
+        <li>Choose the default components and click Next</li>
+        <li>Choose the installation path and click Install</li>
+        <li>Accept the default settings</li>
+        <li>Click Install and Finish once Npcap is done</li>
+    </ol>
+
+    <h2>Finding the IP Range</h2>
+    <ol>
+        <li>Open the command prompt on the system and type in the below command <code>ipconfig</code></li>
+        <br><img src="ipconfig.png"></br><br>
+        <li>From the available information, look for the “Wireless LAN adapter Wi-Fi:”</li>
+        <br><img src="ip_range.png"></br><br>
+        <li>Here, from the IP address, subnet mask and default gateway, the IP range is found</li>
+        <li>The IP range is <code>192.168.94.0/24</code></li>
+    </ol>
+
+    <h2>Perform TCP SYN Scan using Nmap</h2>
+    <ol>
+        <li>Type the command <b>nmap -sS 192.168.94.0/24</b> and click enter</li>
+        <li>The list of hosts and the open ports are displayed below</li>
+        <br><img src="NmapScan.png"></br><br>
+        <li>The two hosts are <b>192.168.94.138</b> and <b>192.168.94.250</b></li>
+        <li>The host <b>192.168.94.250</b> is a DNS server and it has only port <b>53 open</b> which is used for DNS services</li>
+        <li>The host <b>192.168.94.138</b> is the IP address assigned for the system to access internet and the open 4 tcp ports are <b>135, 139, 445, 3386.</b> There are <b>16 filtered</b> ports too</li>
+    </ol>
+
+    <h2>Open, Filtered and Closed Ports</h2>
+    <h3>1. Open Port</h3>
+    <p><strong>Simple Meaning:</strong> There's an application or service actively listening and ready to communicate on that port.</p>
+    <p><strong>Analogy:</strong> This is like a door that's wide open and someone (a receptionist, a shop owner) is standing there, ready to greet you and do business.</p>
+    <p><strong>Technical Detail:</strong> When a port scanner sends a probe (like a knock on the door), the target system responds in a way that clearly indicates a service is running and accepting connections.</p>
+    <p><strong>Security Implication:</strong> This is the primary goal for both legitimate users (who want to use the service) and attackers (who want to find vulnerable services). Each open port is a potential entry point.</p>
+
+    <h3>2. Closed Port</h3>
+    <p><strong>Simple Meaning:</strong> No application or service is currently listening on that port, but the port itself is accessible.</p>
+    <p><strong>Analogy:</strong> This is like a locked door that you can still reach and knock on. The building's security system (operating system) responds by saying, "Nobody's home on this door."</p>
+    <p><strong>Technical Detail:</strong> When a port scanner sends a probe, the target system explicitly responds with a "port unreachable" or "reset" message, indicating no service is listening.</p>
+    <p><strong>Security Implication:</strong> While not an immediate vulnerability, a closed port still tells an attacker that there's a live computer at that address. It also means the port could become open later if a service starts.</p>
+
+    <h3>3. Filtered Port</h3>
+    <p><strong>Simple Meaning:</strong> A firewall, router, or other security device is blocking or "filtering" the connection attempts to this port. The scanner can't tell if a service is listening or not.</p>
+    <p><strong>Analogy:</strong> This is like a door behind a bodyguard or a thick, soundproof wall. When you knock, you get no response at all, or perhaps a vague message that the bodyguard is "not accepting visitors." You don't know if there's someone inside or not.</p>
+    <p><strong>Technical Detail:</strong> When a port scanner sends a probe, it receives no response back, or sometimes an ICMP "administratively prohibited" error. The firewall is simply dropping the packets.</p>
+    <p><strong>Security Implication:</strong> This is generally good from a security standpoint because it provides the least information to an attacker. It hides the true state of the port, making it harder for an attacker to determine if a service is running behind the filter. However, it also means Nmap (or other scanners) can't definitively say if the port is open or closed, only that it's protected by a filter.</p>
+
+    <h2>Packet Capture with Wireshark</h2>
+    <ol>
+        <li>In the below captured Wireshark packets, the highlighted blue packet has the destination address of the DNS server as found by the Nmap Scan</li>
+        <br><img src="WiresharkCapture.png"></br><br>
+        <li>Here, the source address is the device’s IP address, it sends query to the DNS server to fetch the right IP address for the given domain linkedin.com</li>
+        <li>The DNS uses port 53, which is also available in the Wireshark capture</li>
+        <li>With the help of Wireshark, each packet can be analyzed for detailed inspection</li>
+    </ol>
+
+    <h2>Common Services Running on Ports</h2>
+    <h3>1. Port 53</h3>
+    <p>As already mentioned above in the Wireshark capture, the port 53 is used for running DNS services. DNS is a critical service that translates human-readable domain names (like google.com) into machine-readable IP addresses (like 172.217.160.142) that computers use to locate each other on the internet. Without DNS, you wouldn't be able to browse websites, send emails, or use most internet services by their domain names.</p>
+    <h4>Risks:</h4>
+    <ul>
+        <li><strong>DNS Amplification/Reflection Attacks (DDoS):</strong> Attackers send small DNS queries to an open DNS resolver while spoofing the source IP address to be that of their target.</li>
+        <li><strong>DNS Cache Poisoning / DNS Spoofing:</strong> Attackers inject forged or malicious data into a DNS server's cache.</li>
+        <li><strong>DNS Hijacking:</strong> Attackers gain unauthorized control over a DNS server or a domain's DNS records.</li>
+        <li><strong>Data Exfiltration (DNS Tunneling):</strong> Attackers can use DNS queries and responses to tunnel data out of a compromised network.</li>
+        <li><strong>Information Gathering / Reconnaissance:</strong> An open DNS server can be queried to gather information about a network's internal structure.</li>
+        <li><strong>Brute-Force Attacks:</strong> Attackers could try to brute-force credentials or exploit other weaknesses.</li>
+    </ul>
+    <h4>Security Measures:</h4>
+    <ul>
+        <li><strong>Restrict Access (Firewalling):</strong> Do not expose your DNS server to the public internet unless it's explicitly designed to be a public-facing authoritative DNS server.</li>
+        <li><strong>Implement DNSSEC:</strong> DNS Security Extensions add cryptographic signatures to DNS data.</li>
+        <li><strong>Rate Limiting:</strong> Configure your DNS server to rate-limit responses and queries from a single source.</li>
+        <li><strong>Keep Software Updated:</strong> Regularly patch and update your DNS server software.</li>
+        <li><strong>Monitor DNS Traffic:</strong> Implement logging and monitoring of DNS queries and responses.</li>
+        <li><strong>Separate Recursive and Authoritative DNS:</strong> Run your public-facing authoritative DNS servers separately from your internal recursive DNS resolvers.</li>
+    </ul>
+
+    <h3>2. Port 135</h3>
+    <p>This port is used by Windows Remote Procedure Call (RPC) Endpoint Mapper service. It is crucial for many core Windows services and applications.</p>
+    <h4>Risks:</h4>
+    <ul>
+        <li><strong>Remote Code Execution (RCE):</strong> Attackers could potentially run arbitrary code on a vulnerable system.</li>
+        <li><strong>Sensitive Data Exposure:</strong> Gaining access to information about services running on the system.</li>
+        <li><strong>Denial-of-Service (DoS) Attacks:</strong> Overwhelming the port with requests to disrupt service.</li>
+    </ul>
+    <h4>Security Measures:</h4>
+    <ul>
+        <li><strong>Firewalling:</strong> Port 135 should generally not be exposed to the public internet.</li>
+        <li><strong>Disable if Not Needed:</strong> Consider blocking or disabling port 135 if not required.</li>
+        <li><strong>Regular Patching:</strong> Keep your Windows systems and applications up to date.</li>
+    </ul>
+
+    <h3>3. Port 139</h3>
+    <p>This port is associated with NetBIOS Session Service.</p>
+    <h4>Risks:</h4>
+    <ul>
+        <li><strong>Ransomware:</strong> Many ransomware strains exploited vulnerabilities in SMBv1 exposed on ports 139 and 445.</li>
+        <li><strong>Unauthorized Access:</strong> Attackers could exploit misconfigurations or vulnerabilities.</li>
+        <li><strong>Information Gathering:</strong> It can be used to enumerate network resources and users.</li>
+    </ul>
+    <h4>Security Measures:</h4>
+    <ul>
+        <li><strong>Block Port 139 (and 445) from the Internet:</strong> These ports should never be directly exposed to the public internet.</li>
+        <li><strong>Disable SMBv1:</strong> Highly recommended to disable SMBv1 due to its known security flaws.</li>
+        <li><strong>Firewalling:</strong> Implement strict firewall rules to restrict access to ports 139 and 445.</li>
+        <li><strong>Patching:</strong> Keep all Windows systems and network devices patched and updated.</li>
+        <li><strong>Strong Access Controls:</strong> Ensure proper authentication and authorization for shared resources.</li>
+    </ul>
+
+    <h3>4. Port 3386</h3>
+    <p>TCP port 3386 is officially registered for GPRS Data, specifically related to GTP' (GPRS Tunnelling Protocol Prime).</p>
+    <h4>Risks:</h4>
+    <ul>
+        <li><strong>Billing Fraud and Revenue Loss:</strong> Attackers could intercept or manipulate charging data records.</li>
+        <li><strong>Denial of Service (DoS) to Billing System:</strong> Flooding the port could disrupt the charging data transfer.</li>
+        <li><strong>Information Disclosure:</strong> Subscriber data leakage might occur if vulnerabilities exist.</li>
+        <li><strong>Network Compromise:</strong> Exploitation of vulnerabilities could lead to remote code execution.</li>
+        <li><strong>Disruption of Mobile Services:</strong> Compromise of core network billing systems can impact service delivery.</li>
+    </ul>
+    <h4>Security Measures:</h4>
+    <ul>
+        <li><strong>Strict Network Segmentation and Firewalling:</strong> Systems running GTP' services should be isolated.</li>
+        <li><strong>Regular Patching and Updates:</strong> Keep the operating system and GTP' implementation fully patched.</li>
+        <li><strong>Strong Authentication and Authorization:</strong> Enforce strong, multi-factor authentication.</li>
+        <li><strong>Intrusion Detection/Prevention Systems (IDS/IPS):</strong> Deploy solutions capable of inspecting GTP' traffic.</li>
+        <li><strong>Logging and Monitoring:</strong> Enable comprehensive logging on the system hosting the service.</li>
+        <li><strong>Secure Configuration:</strong> Harden the operating system and the GTP' application.</li>
+        <li><strong>Regular Security Audits and Penetration Testing:</strong> Conduct periodic assessments against systems hosting port 3386.</li>
+    </ul>
+
+    <h2>Potential Security Risks from Open Ports</h2>
+    <p>When you have open ports on your computer or network, it's like leaving unlocked doors or windows in your house. Here are the main security risks:</p>
+    <h3>Key Security Risks from Open Ports</h3>
+    <ul>
+        <li><strong>Easy Entry for Attackers (Exploitation):</strong> Open ports allow services to listen for incoming connections.</li>
+        <li><strong>Data Theft and System Takeover:</strong> Attackers can try to guess passwords or use stolen login details.</li>
+        <li><strong>Your System Becomes a Weapon (DDoS Attacks):</strong> Attackers can use your open ports to launch attacks against others.</li>
+        <li><strong>Information Leakage (Reconnaissance):</strong> An open port can reveal details about your system.</li>
+    </ul>
+
+    <h3>Key Security Measures</h3>
+    <ul>
+        <li><strong>Close Unnecessary Ports:</strong> If a port isn't needed, close it immediately.</li>
+        <li><strong>Use Firewalls:</strong> Configure your firewall to allow only legitimate traffic.</li>
+        <li><strong>Keep Everything Updated:</strong> Regularly update your software and operating system.</li>
+        <li><strong>Strong Passwords & MFA:</strong> Use strong, unique passwords and enable Multi-Factor Authentication.</li>
+    </ul>
+
+    <p>By managing your open ports carefully, you significantly reduce your vulnerability to cyberattacks.</p>
+</body>
+</html>
