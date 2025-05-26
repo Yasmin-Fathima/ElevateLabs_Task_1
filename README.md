@@ -17,8 +17,13 @@ Scan the local network for open ports<br>
 Using the command ipconfig, find the local IP range<br><br>
 #Perform TCP SYN scan     <br> 
 Run a TCP SYN scan by opening Nmap     <br><br>  
-#Hosts and open ports     <br> 
-The scan results in the hosts that are up and the open ports associated with it      <br><br>  
+The scan results in the hosts that are up and the open ports associated with it      <br><br>
+#Open, Filtered and Closed ports<br>
+Explained the open, filtered and closed ports <br><br>
 #Packet capture using Wireshark    <br> 
 1. Analyse the network traffic with the help of wireshark    <br> 
-2. Find the services running on the ports    <br> 
+2. Find the services running on the ports    <br><br>
+#Common Services running on ports<br>
+Explined the services running on the open port with thi risks and security measures<br><br>
+#Potential Security Risks from Open ports<br>
+Explained the security risks associated with open ports and key security measures to protect yourself
