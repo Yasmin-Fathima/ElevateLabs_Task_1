@@ -1,13 +1,13 @@
 # ElevateLabs_Task_1  
-Scan the local network for open ports  
+Scan the local network for open ports<br><br>  
 #Installing Nmap on Windows  
-Go to https://nmap.org/download.html  
-Click on Windows  
-Click on the Latest stablerelease self-installer  
-Once the download is complete, locate the nmap-version-setup.exe file and double click on it to run  
-Click <bold>Yes to the prompt to allow the app to make changes to your device  
-Click <bold>Agree after reading the License Agreement  
-Choose the default components and click Next  
-Choose the installation path and click Install  
-Accept the default settings  
-Click Install and Finish once Npcap is done  
+1. Go to https://nmap.org/download.html  
+2. Click on Windows  
+3. Click on the Latest stablerelease self-installer  
+4. Once the download is complete, locate the nmap-version-setup.exe file and double click on it to run  
+5. Click <bold>Yes to the prompt to allow the app to make changes to your device  
+6. Click <bold>Agree after reading the License Agreement  
+7. Choose the default components and click Next  
+8. Choose the installation path and click Install  
+9. Accept the default settings  
+10. Click Install and Finish once Npcap is done  
