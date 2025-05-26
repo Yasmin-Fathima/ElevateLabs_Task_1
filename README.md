@@ -1,6 +1,6 @@
 # ElevateLabs_Task_1  
 Scan the local network for open ports<br> 
-(Detailed explanation and screenshots are available on the task-1 file)<br><br> 
+(Detailed explanation and screenshots are available on the Task-1 file)<br><br> 
 #Installing Nmap on Windows  
 1. Go to https://nmap.org/download.html  
 2. Click on Windows  
