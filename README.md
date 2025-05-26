@@ -12,12 +12,12 @@ Scan the local network for open ports<br><br>
 9. Accept the default settings  
 10. Click Install and Finish once Npcap is done  
 <br>
-#Finding IP Range    
-Using the command ipconfig, find the local IP range     
-#Perform TCP SYN scan     
-Run a TCP SYN scan by opening Nmap     
-#Hosts and open ports     
-The scan results in the hosts that are up and the open ports associated with it      
-#Packet capture using Wireshark    
-1. Analyse the network traffic with the help of wireshark    
-2. Find the services running on the ports    
+#Finding IP Range<br>  
+Using the command ipconfig, find the local IP range<br> 
+#Perform TCP SYN scan     <br> 
+Run a TCP SYN scan by opening Nmap     <br> 
+#Hosts and open ports     <br> 
+The scan results in the hosts that are up and the open ports associated with it      <br> 
+#Packet capture using Wireshark    <br> 
+1. Analyse the network traffic with the help of wireshark    <br> 
+2. Find the services running on the ports    <br> 
